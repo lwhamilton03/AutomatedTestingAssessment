@@ -47,9 +47,10 @@ public class StepDefinitionAssessment {
 	{
 		test = ReportUtils.report.startTest("UserScreen");
 		ReportUtils.count++; 
-		driver.get(Constants.LOADUPAGE);
 		
 		test.log(LogStatus.INFO, "Load up the initial page");
+		driver.get(Constants.LOADUPAGE);
+		
 		LoadUpPage load = PageFactory.initElements(driver, LoadUpPage.class);
 		
 		test.log(LogStatus.INFO, "Log In as Admin");
@@ -88,53 +89,81 @@ public class StepDefinitionAssessment {
 	public void the_Username_should_be_visible_on_the_UsersScreen() 
 	{
 		driver.get(Constants.USERS);
-		//WebElement wait = (new WebDriverWait(driver,10)).until(ExpectedConditions.presenceOfElementLocated(By.id("main-panel")));
-		//wait.getText(); 
-		UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
-		System.out.println(userVisable.getManageUsers().getText());
-		//Assert.assertEquals("User Not Visable", true, userVisable.getManageUsers().getText().contains("Lucy"));
-		//userVisable.checkUserDisplayed("Lucy");
+		//Try and use a wait or redirect
 		
-		//include the IF for the pass and the fail of the then to the REPORT!!!
-		Assert.assertEquals("User Not Displayed", true, userVisable.checkUser("Lucy"));
-			   
+		UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
+//		Assert.assertEquals("User Not Displayed", true, userVisable.checkUser("Lucy"));
+		test.log(LogStatus.INFO, "Checking if the User is visible on the screen");
+		//INSERT SCREENSHOT IF TIME ALLOWS
+		
+		if(userVisable.checkUserDisplayed("Lucy"))
+		{
+			test.log(LogStatus.PASS, "User is displayed on the User Screen");
+		}
+		else
+		{
+			test.log(LogStatus.FAIL, "User is NOT displayed on the User Screen");
+		}
+		
+		Assert.assertEquals("User Not Visable", true, userVisable.checkUserDisplayed("Lucy"));
 	}
 
 	@When("^the User details \"([^\"]*)\" username, \"([^\"]*)\" password, \"([^\"]*)\" confirm Password, \"([^\"]*)\" Fullname and \"([^\"]*)\" EmailAddress are entered on the Create UserScreen$")
 	public void the_User_details_username_password_confirm_Password_Fullname_and_EmailAddress_are_entered_on_the_Create_UserScreen(String arg1, String arg2, String arg3, String arg4, String arg5) throws Throwable {
+		
+		//Writing to Excel Spreadsheet
 		ExcelUtilsAssessment.setExcelFile(Constants.ExcelReportPath + Constants.ExcelReportFile, 0);
 		ExcelUtilsAssessment.setCellData(arg1, ReportUtils.count, 0);
 		ExcelUtilsAssessment.setCellData(arg2, ReportUtils.count, 1);
 		ExcelUtilsAssessment.setCellData(arg4, ReportUtils.count, 2);
 		
+		test.log(LogStatus.INFO, "User Created using Username: " + arg1 + ", Password: " + arg2 + " Confirm Password: " + arg3 + ", Fullname: " + arg4 );
 		CreateUserPage create = PageFactory.initElements(driver, CreateUserPage.class);
 	    create.createUser(arg1, arg2, arg3, arg4);
-	    
 	}
 
 	@Then("^the \"([^\"]*)\" username should be visible on the UsersScreen$")
-	public void the_username_should_be_visible_on_the_UsersScreen(String arg1)  {
+	public void the_username_should_be_visible_on_the_UsersScreen(String arg1) 
+	{
 		driver.get(Constants.USERS);
+		
 		//WebElement wait = (new WebDriverWait(driver,10)).until(ExpectedConditions.presenceOfElementLocated(By.id("main-panel")));
 		UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
-		//userVisable.checkUserDisplayed(arg1, "Lucy Hamilton");
-		//Assert.assertEquals("User Not Displayed", true, userVisable.checkUserDisplayed(arg1));
-		//driver.get(Constants.USERS);
-		Assert.assertEquals("User Not Visable", true, userVisable.getManageUsers().getText().contains(arg1));
+		if(userVisable.checkUserDisplayed(arg1))
+		{
+			test.log(LogStatus.PASS, arg1 + " is visible on the User Screen");
+		}
+		else
+		{
+			test.log(LogStatus.FAIL, arg1 + " is NOT visible on the User Screen");
+		}
+		//INSERT SCREENSHOT if time will allow for it
+		Assert.assertEquals("User Not Displayed", true, userVisable.checkUserDisplayed(arg1));
 	}
 
 	@Given("^the \"([^\"]*)\" username is visible on the UsersScreen$")
 	public void the_username_is_visible_on_the_UsersScreen(String arg1) 
 	{
-		test = ReportUtils.report.startTest("Username Visable on Screen");
+		test = ReportUtils.report.startTest("User Profile displaying on the profile screen Test");
+		
+		test.log(LogStatus.INFO, "Load up the initial page");
 		driver.get(Constants.LOADUPAGE);
+		
+		test.log(LogStatus.INFO, "Log In using Admin");
 		LoadUpPage load = PageFactory.initElements(driver, LoadUpPage.class);
 		load.logIn("Admin", "b0a4a0b0712f4fc88f423b351eda29c0");
+		
+		test.log(LogStatus.INFO, "Navigate to manage tasks");
 	    HomePage home = PageFactory.initElements(driver, HomePage.class);
 	    home.clickManageTasks();
 	    
+	    test.log(LogStatus.INFO, "Navigate to manage users");
 	    ManageJenkinsPage manage = PageFactory.initElements(driver, ManageJenkinsPage.class); 
 	    manage.clickManage();
+	    
+	    test.log(LogStatus.INFO, "Search for User and Navigate to their profile page");
+	    UsersPage userSearch = PageFactory.initElements(driver, UsersPage.class);
+	    userSearch.findUser("mathewhunt", "Matt");
 	    
 	   // UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
 	   // Assert.assertEquals("User Not Visable", true, userVisable.getManageUsers().getText().contains(arg1));

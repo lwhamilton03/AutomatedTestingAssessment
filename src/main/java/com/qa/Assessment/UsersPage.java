@@ -5,14 +5,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import com.qa.Assessment.Constants;
+import com.relevantcodes.extentreports.LogStatus;
 
 public class UsersPage {
 
@@ -44,11 +47,12 @@ public class UsersPage {
 		//List<WebElement> eachUser = manageUsers.findElements(By.xpath(Constants.LISTUSERID)); 
 		List<WebElement> eachUser = getManageUsers().findElements(By.xpath("*[@id='people']/tbody/tr"));
 		//may need to move the / at the end of it
-		for(int i = 1; i < eachUser.size(); i++)
+		for(int i = 2; i < eachUser.size() + 1; i++)
 			{
 				
-				if(getManageUsers().findElement(By.xpath("//*[@id='people']/tbody/tr[2]/td[2]/tr[" + i + "]/td[2]")).getText().equals(userId))
+				if(getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[2]")).getText().equals(userId))
 				{
+					
 //					if(manageUsers.getText().contains(fullName))
 //					{
 //						return true; 
@@ -57,6 +61,26 @@ public class UsersPage {
 				}
 			}
 		return false; 
+	}
+	
+	
+	public void findUser(String userId, String nam)
+	{
+		List<WebElement> eachUser = getManageUsers().findElements(By.xpath("*[@id='people']/tbody/tr"));
+		//may need to move the / at the end of it
+		for(int i = 2; i < eachUser.size() + 1; i++)
+			{
+				
+				if(getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[2]")).getText().equals(userId))
+				{
+					if(getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[3]")).getText().equals(nam))
+					{
+						getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[2]/a")).click();
+					}
+					
+				}
+			}
+		 
 	}
 	
 	public String takeScreenShot(WebDriver drive)
@@ -73,26 +97,7 @@ public class UsersPage {
 		//System.out.println(scrFile.getAbsolutePath());
 
 	}
-//	public boolean checkUserDisplayed(String userId, String fullName)
-//	{
-//		
-//		//String listDress = "//*[@id=\"center_column\"]/ul/li" == Constants.LISTUSERID 
-//		List<WebElement> eachUser = manageUsers.findElements(By.xpath(Constants.LISTUSERID)); 
-//		//may need to move the / at the end of it
-//		for(int i = 1; i < eachUser.size(); i++)
-//			{
-//				
-//				if(manageUsers.findElement(By.xpath("//*[@id='people']/tbody/tr[2]/td[2]/tr[" + i + "]/td[2]")).getText().equals(userId))
-//				{
-//					if(manageUsers.getText().contains(fullName))
-//					{
-//						return true; 
-//					}
-//					return false; 
-//				}
-//			}
-//		return false; 
-//	}
+
 
 
 	public WebElement getManageUsers() {
