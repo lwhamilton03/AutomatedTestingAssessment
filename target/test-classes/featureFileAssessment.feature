@@ -30,13 +30,13 @@ Scenario Outline: View the details of a User on a database
 Examples:
   | Username | FullName |
   | matthewhunt | Matttt |
-  | Chris95 | Christopher Perrins |
-  | Dev | Dev Gonsai |
+#  | Chris95 | Christopher Perrins |
+#  | Dev | Dev Gonsai |
   
   
 Scenario Outline: Updating the full name of a User
   Given the "<Username>" Username's profile page has been loaded
-  And the configure button has been clicked on the profile page
+  And the configure button has been clicked on the profile page username "<Username>"
   When I change the old full name on the Configure Page to a new full name "<NewFullName>"
   And I save the changes to the Configure Page
   Then the Configure Page should show the new email address "<NewFullName>"
@@ -44,5 +44,6 @@ Scenario Outline: Updating the full name of a User
 Examples:
   | Username | NewFullName |
   | Chris95 | Chrissss |
-  | M4TT | mttttee |
   | Dev | DEvvE |
+  | matthewhunt | Matttt |
+   

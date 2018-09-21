@@ -234,19 +234,46 @@ public class StepDefinitionAssessment {
 	    
 	}
 
-	@Given("^the configure button has been clicked on the profile page$")
-	public void the_configure_button_has_been_clicked_on_the_profile_page()
-	{
+	@Given("^the configure button has been clicked on the profile page username \"([^\"]*)\"$")
+	public void the_configure_button_has_been_clicked_on_the_profile_page_username(String arg1)  {
+		test = ReportUtils.report.startTest("Username Profile new email");
+		ReportUtils.count++; 
+			
+		test.log(LogStatus.INFO, "Load up the initial page");
+		driver.get(Constants.LOADUPAGE);
 		
-		test.log(LogStatus.INFO, "click the configure button");
 		LoadUpPage load = PageFactory.initElements(driver, LoadUpPage.class);
 		
 		test.log(LogStatus.INFO, "Log In as Admin");
 		load.logIn("Admin", "b0a4a0b0712f4fc88f423b351eda29c0");
+	    
+	    test.log(LogStatus.INFO, "Navigate to manage tasks");
+		HomePage home = PageFactory.initElements(driver, HomePage.class);
+	    home.clickManageTasks();
+	    
+	    test.log(LogStatus.INFO, "Navigate to User Page");
+	    ManageJenkinsPage manage = PageFactory.initElements(driver, ManageJenkinsPage.class); 
+	    manage.clickManage();
+	   
+	    test.log(LogStatus.INFO, "Search" + arg1 + " and Click on Profile");
+	    UsersPage userSearch = PageFactory.initElements(driver, UsersPage.class);
+	    userSearch.findUserName(arg1);
+		
+		driver.get(Constants.CONFIGPAGE + arg1 + "/configure");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		test.log(LogStatus.INFO, "click the configure button");
+		
 		ProfilePage profile = PageFactory.initElements(driver, ProfilePage.class);
 		profile.clickConfigure();
-		
 	}
+	
+		
+	
 	
 	@When("^I change the old full name on the Configure Page to a new full name \"([^\"]*)\"$")
 	public void i_change_the_old_full_name_on_the_Configure_Page_to_a_new_full_name(String arg1) 
@@ -282,6 +309,7 @@ public class StepDefinitionAssessment {
 	public void the_Configure_Page_should_show_the_new_email_address(String arg1) 
 	{
 		ConfigurePage config = PageFactory.initElements(driver, ConfigurePage.class);
+		
 		Assert.assertEquals("Changes have not been saved", true, config.getFullName().getText().equals(arg1));
 	}
 	
