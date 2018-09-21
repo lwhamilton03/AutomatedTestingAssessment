@@ -80,17 +80,26 @@ public class UsersPage {
 					
 				}
 			}
-		 
 	}
 	
 	public void findUserName(String user)
 	{
-		
+		List<WebElement> eachUser = getManageUsers().findElements(By.xpath("//*[@id='people']/tbody/tr"));
+		//may need to move the / at the end of it
+		for(int i = 2; i < eachUser.size() + 1; i++)
+			{
+			
+				if(getManageUsers().findElement(By.xpath("//*[@id='people']/tbody/tr[" + i + "]/td[2]")).getText().equals(user))
+				{
+						getManageUsers().findElement(By.xpath("//*[@id='people']/tbody/tr[" + i + "]/td[2]/a")).click();
+				}
+			}
+		 
 	}
 	
-	public String takeScreenShot(WebDriver drive)
+	public String screenShot(WebDriver screenDriver)
 	{
-		File scrFile = ((TakesScreenshot)drive).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot)screenDriver).getScreenshotAs(OutputType.FILE);
 		System.out.println(scrFile.getAbsolutePath());
 		try {
 			FileUtils.copyFile(scrFile, new File(Constants.LOGSCREENSHOT));

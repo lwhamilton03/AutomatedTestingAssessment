@@ -19,7 +19,7 @@ Examples:
   | Username | Password | ConfirmPassword | FullName | EmailAddress |
   | Chris95 | guest | guest | Christopher Perrins | christopher.perrins@qa.com |
   | M4TT | chick3nWing | chick3nWing | matthewhunt | matthew.hunt@qa.com |
-  | D£v | D@T@ | D@T@ | Dev Gonsai | dev.gonsai@qa.com | 
+  | Dev | D@T@ | D@T@ | Dev Gonsai | dev.gonsai@qa.com | 
   | matthewhunt | chick3nWing | chick3nWing | Matttt | matthew.hunt@qa.com |
   
 Scenario Outline: View the details of a User on a database
@@ -29,19 +29,20 @@ Scenario Outline: View the details of a User on a database
   
 Examples:
   | Username | FullName |
-  | Chris95 | Christopher Perrins |
-  | D£v | Dev Gonsai |
   | matthewhunt | Matttt |
+  | Chris95 | Christopher Perrins |
+  | Dev | Dev Gonsai |
   
-Scenario Outline: Updating the email address of a User
+  
+Scenario Outline: Updating the full name of a User
   Given the "<Username>" Username's profile page has been loaded
   And the configure button has been clicked on the profile page
-  When I change the old email address on the Configure Page to a new email address "<NewEmail>"
+  When I change the old full name on the Configure Page to a new full name "<NewFullName>"
   And I save the changes to the Configure Page
-  Then the Configure Page should show the new email address "<NewEmail>"
+  Then the Configure Page should show the new email address "<NewFullName>"
   
 Examples:
-  | Username | NewEmail |
-  | Chris95 | chris@qa.com |
-  | M4TT | matt@qa.com |
-  | D£v | dev@qa.com |
+  | Username | NewFullName |
+  | Chris95 | Chrissss |
+  | M4TT | mttttee |
+  | Dev | DEvvE |

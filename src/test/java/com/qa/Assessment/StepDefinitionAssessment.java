@@ -10,12 +10,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qa.Assessment.Constants;
 import com.qa.Assessment.ExcelUtilsAssessment;
+
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
@@ -95,6 +97,7 @@ public class StepDefinitionAssessment {
 //		Assert.assertEquals("User Not Displayed", true, userVisable.checkUser("Lucy"));
 		test.log(LogStatus.INFO, "Checking if the User is visible on the screen");
 		//INSERT SCREENSHOT IF TIME ALLOWS
+		userVisable.screenShot(driver);
 		
 		if(userVisable.checkUserDisplayed("Lucy"))
 		{
@@ -126,15 +129,17 @@ public class StepDefinitionAssessment {
 	public void the_username_should_be_visible_on_the_UsersScreen(String arg1) 
 	{
 		driver.get(Constants.USERS);
-		
+		ExcelUtilsAssessment.setExcelFile(Constants.ExcelReportPath + Constants.ExcelReportFile, 0);
 		//WebElement wait = (new WebDriverWait(driver,10)).until(ExpectedConditions.presenceOfElementLocated(By.id("main-panel")));
 		UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
 		if(userVisable.checkUserDisplayed(arg1))
 		{
+			ExcelUtilsAssessment.setCellData("PASS", ReportUtils.count, 3);
 			test.log(LogStatus.PASS, arg1 + " is visible on the User Screen");
 		}
 		else
 		{
+			ExcelUtilsAssessment.setCellData("FAIL", ReportUtils.count, 3);
 			test.log(LogStatus.FAIL, arg1 + " is NOT visible on the User Screen");
 		}
 		//INSERT SCREENSHOT if time will allow for it
@@ -194,10 +199,11 @@ public class StepDefinitionAssessment {
 	
 
 	@Given("^the \"([^\"]*)\" Username's profile page has been loaded$")
-	public void the_Username_s_profile_page_has_been_loaded(String arg1)  {
+	public void the_Username_s_profile_page_has_been_loaded(String arg1) 
+	{
 		test = ReportUtils.report.startTest("Username Profile new email");
 		ReportUtils.count++; 
-		
+			
 		test.log(LogStatus.INFO, "Load up the initial page");
 		driver.get(Constants.LOADUPAGE);
 		
@@ -213,34 +219,70 @@ public class StepDefinitionAssessment {
 	    test.log(LogStatus.INFO, "Navigate to User Page");
 	    ManageJenkinsPage manage = PageFactory.initElements(driver, ManageJenkinsPage.class); 
 	    manage.clickManage();
-	    
+	   
+	    test.log(LogStatus.INFO, "Search" + arg1 + " and Click on Profile");
 	    UsersPage userSearch = PageFactory.initElements(driver, UsersPage.class);
 	    userSearch.findUserName(arg1);
+		
+		driver.get(Constants.CONFIGPAGE + arg1 + "/configure");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    
 	}
 
 	@Given("^the configure button has been clicked on the profile page$")
-	public void the_configure_button_has_been_clicked_on_the_profile_page() throws Throwable {
-		test = ReportUtils.report.startTest("Username Profile new email");
-	    throw new PendingException();
+	public void the_configure_button_has_been_clicked_on_the_profile_page()
+	{
+		
+		test.log(LogStatus.INFO, "click the configure button");
+		LoadUpPage load = PageFactory.initElements(driver, LoadUpPage.class);
+		
+		test.log(LogStatus.INFO, "Log In as Admin");
+		load.logIn("Admin", "b0a4a0b0712f4fc88f423b351eda29c0");
+		ProfilePage profile = PageFactory.initElements(driver, ProfilePage.class);
+		profile.clickConfigure();
+		
 	}
-
-	@When("^I change the old email address on the Configure Page to a new email address \"([^\"]*)\"$")
-	public void i_change_the_old_email_address_on_the_Configure_Page_to_a_new_email_address(String arg1) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	
+	@When("^I change the old full name on the Configure Page to a new full name \"([^\"]*)\"$")
+	public void i_change_the_old_full_name_on_the_Configure_Page_to_a_new_full_name(String arg1) 
+	{
+	    ConfigurePage config = PageFactory.initElements(driver, ConfigurePage.class);
+	    config.clickName();
+	    
+	    test.log(LogStatus.INFO, "Click on the full name bar");
+	    Actions action = new Actions(driver);
+	    test.log(LogStatus.INFO, "double click and wrtie name ");
+	    action.doubleClick().click().sendKeys(arg1).perform();
+	    try {
+			Thread.sleep(3500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 
+	    test.log(LogStatus.INFO, "Apply the new name");
+	    config.apply();
+	    
 	}
 
 	@When("^I save the changes to the Configure Page$")
-	public void i_save_the_changes_to_the_Configure_Page() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	public void i_save_the_changes_to_the_Configure_Page() 
+	{
+		test.log(LogStatus.INFO, "Save the new name (changes)");
+		ConfigurePage config = PageFactory.initElements(driver, ConfigurePage.class);
+		config.save(); 
 	}
 
 	@Then("^the Configure Page should show the new email address \"([^\"]*)\"$")
-	public void the_Configure_Page_should_show_the_new_email_address(String arg1) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	public void the_Configure_Page_should_show_the_new_email_address(String arg1) 
+	{
+		ConfigurePage config = PageFactory.initElements(driver, ConfigurePage.class);
+		Assert.assertEquals("Changes have not been saved", true, config.getFullName().getText().equals(arg1));
 	}
 	
 	@After

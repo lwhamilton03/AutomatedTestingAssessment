@@ -10,13 +10,13 @@ public class Constants {
 	public static final String MANAGEJENKINS ="http://localhost:8080/manage";
 	public static final String USERS = "http://localhost:8080/securityRealm/";
 	public static final String CREATEUSERPAGE = "http://localhost:8080/securityRealm/addUser"; 
+	public static final String PROFILEPAGE = ""; 
+	public static final String CONFIGPAGE = "http://localhost:8080/user/";
 	
 	public static final String LISTUSERID = "//*[@id=\"people\"]/tbody";
 	
 	public static final String ReportFile = System.getProperty("user.dir") + "\\reportAssessment.html";  
 	public static final String ExcelReportPath = System.getProperty("user.dir") + "\\"; 
-	//public static final String ExcelReportPath = "C:\\Users\\Admin\\Documents\\Lucy Hamilton\\DemoSiteBDD\\";
 	public static final String ExcelReportFile = "excelReportAssessment.xlsx";
-	
 	public static final String LOGSCREENSHOT = System.getProperty("user.dir") + "\\screenshot.png";
 }
