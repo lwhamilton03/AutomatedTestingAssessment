@@ -145,6 +145,7 @@ public class StepDefinitionAssessment {
 	public void the_username_is_visible_on_the_UsersScreen(String arg1) 
 	{
 		test = ReportUtils.report.startTest("User Profile displaying on the profile screen Test");
+		ReportUtils.count++;
 		
 		test.log(LogStatus.INFO, "Load up the initial page");
 		driver.get(Constants.LOADUPAGE);
@@ -160,33 +161,62 @@ public class StepDefinitionAssessment {
 	    test.log(LogStatus.INFO, "Navigate to manage users");
 	    ManageJenkinsPage manage = PageFactory.initElements(driver, ManageJenkinsPage.class); 
 	    manage.clickManage();
+
+	  //Checking IF user DISPLAYED
+	  // UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
+	  //  Assert.assertEquals("User Not Displayed", true, userVisable.checkUserDisplayed(arg1));
 	    
-	    test.log(LogStatus.INFO, "Search for User and Navigate to their profile page");
+	}
+
+	@When("^the \"([^\"]*)\" username with Full Name \"([^\"]*)\" is clicked on the UserScreen$")
+	public void the_username_with_Full_Name_is_clicked_on_the_UserScreen(String arg1, String arg2) 
+	{
+		test.log(LogStatus.INFO, "Search for" + arg1 + " and Click to their profile page");
 	    UsersPage userSearch = PageFactory.initElements(driver, UsersPage.class);
-	    userSearch.findUser("mathewhunt", "Matt");
-	    
-	   // UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
-	   // Assert.assertEquals("User Not Visable", true, userVisable.getManageUsers().getText().contains(arg1));
-	   // System.out.println(userVisable.getManageUsers().getText());
-	   // UsersPage userVisable = PageFactory.initElements(driver, UsersPage.class);
-		//userVisable.checkUserDisplayed(arg1);
+	    userSearch.findUser(arg1, arg2);
 	    
 	}
 
-	@When("^the \"([^\"]*)\" username is clicked on the UserScreen$")
-	public void the_username_is_clicked_on_the_UserScreen(String arg1)  {
-	    
+	@Then("^the User Profile should display the \"([^\"]*)\" username with FullName \"([^\"]*)\" on the ProfileScreen$")
+	public void the_User_Profile_should_display_the_username_with_FullName_on_the_ProfileScreen(String arg1, String arg2)
+	{
+		ProfilePage profile = PageFactory.initElements(driver, ProfilePage.class);
+		if(profile.getNameText().getText().equals(arg2))
+		{
+			test.log(LogStatus.PASS, arg1 + " is displayed on the Profile Screen");
+		}
+		else
+		{
+			test.log(LogStatus.FAIL, arg1 + " is NOT displated on the profile screen");
+		}
+		Assert.assertEquals("Username not displayed", true, profile.getNameText().getText().equals(arg2));
 	}
-
-	@Then("^the User Profile should display the \"([^\"]*)\" username on the ProfileScreen$")
-	public void the_User_Profile_should_display_the_username_on_the_ProfileScreen(String arg1) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
-	}
+	
 
 	@Given("^the \"([^\"]*)\" Username's profile page has been loaded$")
 	public void the_Username_s_profile_page_has_been_loaded(String arg1)  {
 		test = ReportUtils.report.startTest("Username Profile new email");
+		ReportUtils.count++; 
+		
+		test.log(LogStatus.INFO, "Load up the initial page");
+		driver.get(Constants.LOADUPAGE);
+		
+		LoadUpPage load = PageFactory.initElements(driver, LoadUpPage.class);
+		
+		test.log(LogStatus.INFO, "Log In as Admin");
+		load.logIn("Admin", "b0a4a0b0712f4fc88f423b351eda29c0");
+	    
+	    test.log(LogStatus.INFO, "Navigate to manage tasks");
+		HomePage home = PageFactory.initElements(driver, HomePage.class);
+	    home.clickManageTasks();
+	    
+	    test.log(LogStatus.INFO, "Navigate to User Page");
+	    ManageJenkinsPage manage = PageFactory.initElements(driver, ManageJenkinsPage.class); 
+	    manage.clickManage();
+	    
+	    UsersPage userSearch = PageFactory.initElements(driver, UsersPage.class);
+	    userSearch.findUserName(arg1);
+	    
 	}
 
 	@Given("^the configure button has been clicked on the profile page$")

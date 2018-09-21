@@ -24,14 +24,14 @@ Examples:
   
 Scenario Outline: View the details of a User on a database
   Given the "<Username>" username is visible on the UsersScreen
-  When the "<Username>" username is clicked on the UserScreen
-  Then the User Profile should display the "<Username>" username on the ProfileScreen
+  When the "<Username>" username with Full Name "<FullName>" is clicked on the UserScreen
+  Then the User Profile should display the "<Username>" username with FullName "<FullName>" on the ProfileScreen
   
 Examples:
-  | Username |
-  | Chris95 |
-  | D£v |
-  | MatthewHunt |
+  | Username | FullName |
+  | Chris95 | Christopher Perrins |
+  | D£v | Dev Gonsai |
+  | matthewhunt | Matttt |
   
 Scenario Outline: Updating the email address of a User
   Given the "<Username>" Username's profile page has been loaded

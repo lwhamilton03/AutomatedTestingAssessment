@@ -43,8 +43,6 @@ public class UsersPage {
 	public boolean checkUserDisplayed(String userId)
 	{
 		
-		//String listDress = "//*[@id=\"center_column\"]/ul/li" == Constants.LISTUSERID 
-		//List<WebElement> eachUser = manageUsers.findElements(By.xpath(Constants.LISTUSERID)); 
 		List<WebElement> eachUser = getManageUsers().findElements(By.xpath("*[@id='people']/tbody/tr"));
 		//may need to move the / at the end of it
 		for(int i = 2; i < eachUser.size() + 1; i++)
@@ -64,13 +62,15 @@ public class UsersPage {
 	}
 	
 	
+		
 	public void findUser(String userId, String nam)
 	{
+		
 		List<WebElement> eachUser = getManageUsers().findElements(By.xpath("*[@id='people']/tbody/tr"));
 		//may need to move the / at the end of it
 		for(int i = 2; i < eachUser.size() + 1; i++)
 			{
-				
+			
 				if(getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[2]")).getText().equals(userId))
 				{
 					if(getManageUsers().findElement(By.xpath("*[@id='people']/tbody/tr[" + i + "]/td[3]")).getText().equals(nam))
@@ -81,6 +81,11 @@ public class UsersPage {
 				}
 			}
 		 
+	}
+	
+	public void findUserName(String user)
+	{
+		
 	}
 	
 	public String takeScreenShot(WebDriver drive)
